@@ -21,12 +21,19 @@ set(
     TEST_FILES
     ${CMAKE_SOURCE_DIR}/tests/test_max_area.c
 )
+set(
+    TEST_FRAMEWORK_FILES
+    ${CMAKE_SOURCE_DIR}/lib/unity/src/unity.c
+)
 
 # Main Execution target ###################################
 add_executable(problem ${SRC_FILES} ${CMAKE_SOURCE_DIR}/src/main.c)
 target_include_directories(problem PUBLIC ${INCLUDE_DIR})
 
 # Testing target ##########################################
-add_executable(test_run ${TEST_FILES})
-target_include_directories(test_run PUBLIC ${INCLUDE_DIR})
-add_subdirectory(${CMAKE_SOURCE_DIR}/lib/unity)
+add_executable(test_run ${SRC_FILES} ${TEST_FRAMEWORK_FILES} ${TEST_FILES})
+target_include_directories(test_run 
+                            PUBLIC 
+                            ${INCLUDE_DIR}
+                            ${CMAKE_SOURCE_DIR}/lib/unity/src
+)
