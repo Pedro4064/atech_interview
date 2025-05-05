@@ -118,6 +118,12 @@ int calculate_max_area(char **input_matrix, unsigned int M, unsigned int N) {
 
       node_info furthest_edge =
           search_furthest_nodes(&search_map, row_index, column_index);
+      int area_1 = POINT_DISTANCE(row_index, furthest_edge.bottom_edge.y) *
+                   POINT_DISTANCE(column_index, furthest_edge.bottom_edge.x);
+      int area_2 = POINT_DISTANCE(row_index, furthest_edge.right_edge.y) *
+                   POINT_DISTANCE(column_index, furthest_edge.right_edge.x);
+
+      max_area = MAX(max_area, MAX(area_1, area_2));
     }
   }
 }
