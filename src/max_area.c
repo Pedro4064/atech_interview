@@ -19,23 +19,53 @@
  */
 #define POINT_DISTANCE(a, b) ((a == b) ? (1) : (a - b + 1))
 
+/**
+ * @brief Returns the element in position [row_index][col_index]
+ * of a 2d array from its pointer.
+ */
 #define ACCESS(map, row_index, col_index)                                      \
   (map->map_matrix[(row_index) * map->n_cols + (col_index)])
 
+/**
+ * @brief Struct centralizing all the necessary information
+ * for the map to search.
+ */
 typedef struct MAP {
   char *map_matrix;
   unsigned int n_rows;
   unsigned int n_cols;
 } map;
+
+/**
+ * @brief Struct to represent coordinates on the 2d array.
+ *
+ */
 typedef struct COORDINATES {
   int x;
   int y;
 } coordinate;
+
+/**
+ * @brief Struct holding the result from left and bottom search for a specific
+ * node.
+ *
+ */
 typedef struct NODE_INFO {
   coordinate bottom_edge;
   coordinate right_edge;
 } node_info;
 
+/**
+ * @brief Get the edge with greatest area.
+ *
+ * @param coord_1 Coordinates of the first edge to compare
+ * @param coord_2 Coordinates of the second edge to compare
+ * @param root_row Row index of the root (used as upper edge on area
+ * calculation)
+ * @param root_col Column index of the root (used as upper edge on area
+ * calculation)
+ * @return coordinate
+ */
 coordinate get_edge_with_greatest_area(coordinate coord_1, coordinate coord_2,
                                        int root_row, int root_col) {
   int area_1 =
@@ -45,6 +75,23 @@ coordinate get_edge_with_greatest_area(coordinate coord_1, coordinate coord_2,
   return (area_1 > area_2) ? coord_1 : coord_2;
 }
 
+/**
+ * @brief Filter the 4 resulting edges (2 from bottom search and 2 from right
+ * search) considering its limitations and returns a `node_info` struct
+ * containing the furthest edge starting on the bottom that is also continuous
+ * (no wholes in the resulting rectangle) as well as the edge starting from the
+ * right.
+ *
+ * @param bottom_search_edges Struct containing both the furthest edges from the
+ * bottom node search.
+ * @param right_search_edges Struct containing both the furthest edges from the
+ * right node search.
+ * @param root_row Row index of the root (used as upper edge on area
+ * calculation)
+ * @param root_col Column index of the root (used as upper edge on area
+ * calculation)
+ * @return node_info
+ */
 node_info filter_edges(node_info bottom_search_edges,
                        node_info right_search_edges, int root_row,
                        int root_col) {
@@ -80,6 +127,17 @@ node_info filter_edges(node_info bottom_search_edges,
   return resulting_edges;
 }
 
+/**
+ * @brief Recursively search for the deepest continuous node (i.e connected by
+ * 1) by searching both the bottom direction as well as right diraction until
+ * the edge of the map or a zero is found. The function returns both the result
+ * from the bottom search as well as the right.
+ *
+ * @param search_map Map to search
+ * @param root_row The row index of the root of the search
+ * @param root_col The column index of the root of the search
+ * @return node_info
+ */
 node_info search_furthest_nodes(map *search_map, int root_row, int root_col) {
   node_info bottom_search;
   node_info right_search;
