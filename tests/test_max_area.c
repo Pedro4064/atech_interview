@@ -13,7 +13,7 @@ static void test_empty_map(void) {
       {0, 0, 0, 0},
       {0, 0, 0, 0},
   };
-  TEST_ASSERT_EQUAL(0, calculate_max_area((char **)map, 3, 4));
+  TEST_ASSERT_EQUAL(0, calculate_max_area((char *)map, 3, 4));
 }
 
 static void test_example_given(void) {
@@ -24,7 +24,7 @@ static void test_example_given(void) {
     {1, 0, 0, 1, 0}
   };
 
-  TEST_ASSERT_EQUAL(6, calculate_max_area((char **)map, 4, 5));
+  TEST_ASSERT_EQUAL(6, calculate_max_area((char *)map, 4, 5));
 }
 
 int main(void) {

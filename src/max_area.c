@@ -12,8 +12,12 @@
  * when calculation area.
  */
 #define POINT_DISTANCE(a, b) ((a == b) ? 1 : a - b)
+
+#define ACCESS(map, row_index, col_index)                                      \
+  (map->map_matrix[(row_index) * map->n_cols + (col_index)])
+
 typedef struct MAP {
-  char **map_matrix;
+  char *map_matrix;
   unsigned int n_rows;
   unsigned int n_cols;
 } map;
@@ -78,7 +82,7 @@ node_info search_furthest_nodes(map *search_map, int root_row, int root_col) {
 
   // Search recursively starting from the node bellow
   if (root_row == search_map->n_rows - 1 ||
-      search_map->map_matrix[root_row + 1][root_col] == 0) {
+      ACCESS(search_map, root_row + 1,root_col) == 0) {
     bottom_search.bottom_edge.y = root_row;
     bottom_search.bottom_edge.x = root_col;
 
@@ -90,7 +94,7 @@ node_info search_furthest_nodes(map *search_map, int root_row, int root_col) {
 
   // Search recursively starting from the node on the right
   if (root_col == search_map->n_cols - 1 ||
-      search_map->map_matrix[root_row][root_col + 1] == 0) {
+      ACCESS(search_map, root_row, root_col + 1) == 0) {
     right_search.bottom_edge.y = root_row;
     right_search.bottom_edge.x = root_col;
 
@@ -103,7 +107,8 @@ node_info search_furthest_nodes(map *search_map, int root_row, int root_col) {
   return filter_edges(bottom_search, right_search, root_row, root_col);
 }
 
-int calculate_max_area(char **input_matrix, unsigned int M, unsigned int N) {
+int calculate_max_area(char *input_matrix, unsigned int M, unsigned int N) {
+  int max_area = 0;
   map search_map = {
       .map_matrix = input_matrix,
       .n_rows = M,
@@ -113,7 +118,7 @@ int calculate_max_area(char **input_matrix, unsigned int M, unsigned int N) {
   for (int row_index = 0; row_index < M; row_index++) {
     for (int column_index = 0; column_index < N; column_index++) {
 
-      if (input_matrix[row_index][column_index] == 0)
+      if (ACCESS((&search_map), row_index, column_index) == 0)
         continue;
 
       node_info furthest_edge =
