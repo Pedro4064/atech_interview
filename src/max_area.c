@@ -1,11 +1,18 @@
 #include "max_area.h"
 
 /**
- * @brief Returns the largest value between  the two
+ * @brief Returns the largest value between the two
  * inputs.
  */
 #define MAX(a, b) ((a > b) ? (a) : (b))
 
+/**
+ * @brief Returns the smallest value between the two
+ * inputs.
+ */
+#define MIN(a, b) ((a < b) ? (a) : (b))
+
+#define LIMITED_MAX(max, a, b) (MIN(max, MAX(a, b)))
 /**
  * @brief Returns the distance between two points, but if
  * the points are the same, return 1 as to avoid issues
@@ -51,27 +58,20 @@ node_info filter_edges(node_info bottom_search_edges,
 
   // To determine which of the edges resulted from the right search to use, we
   // first need to disconsider any that have a y coord greater than the allowed
-  // by the search results from the bottom nodes
-  if (right_search_edges.bottom_edge.y > max_y_allowed)
-    resulting_edges.right_edge = right_search_edges.right_edge;
-  else if (right_search_edges.right_edge.y > max_y_allowed)
-    resulting_edges.right_edge = right_search_edges.bottom_edge;
-  else
-    resulting_edges.right_edge = get_edge_with_greatest_area(
-        right_search_edges.bottom_edge, right_search_edges.right_edge, root_row,
-        root_col);
+  resulting_edges.right_edge.y =
+      LIMITED_MAX(max_y_allowed, right_search_edges.right_edge.y,
+                  right_search_edges.bottom_edge.y);
+  resulting_edges.right_edge.x =
+      MAX(right_search_edges.bottom_edge.x, right_search_edges.right_edge.x);
 
   // To determine which of the edges resulted from the bottom search to use, we
   // first need to disconsider any that have a x coord greater than the allowed
   // by the search results from the right nodes
-  if (bottom_search_edges.right_edge.x > max_x_allowed)
-    resulting_edges.bottom_edge = bottom_search_edges.bottom_edge;
-  else if (bottom_search_edges.bottom_edge.x > max_x_allowed)
-    resulting_edges.bottom_edge = bottom_search_edges.right_edge;
-  else
-    resulting_edges.bottom_edge = get_edge_with_greatest_area(
-        bottom_search_edges.bottom_edge, bottom_search_edges.right_edge,
-        root_row, root_col);
+  resulting_edges.bottom_edge.x =
+      LIMITED_MAX(max_x_allowed, bottom_search_edges.bottom_edge.x,
+                  bottom_search_edges.right_edge.x);
+  resulting_edges.bottom_edge.y =
+      MAX(bottom_search_edges.bottom_edge.y, bottom_search_edges.right_edge.y);
 
   return resulting_edges;
 }
