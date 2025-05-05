@@ -8,6 +8,7 @@ project(AtechInterviewProblem VERSION 1.0
 
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+set(CMAKE_BUILD_TYPE Debug)
 
 # File Listings for compilation ##########################
 set(SRC_FILES 
