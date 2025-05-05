@@ -1,6 +1,17 @@
 #include "max_area.h"
 
+/**
+ * @brief Returns the largest value between  the two
+ * inputs.
+ */
 #define MAX(a, b) ((a > b) ? a : b)
+
+/**
+ * @brief Returns the distance between two points, but if
+ * the points are the same, return 1 as to avoid issues
+ * when calculation area.
+ */
+#define POINT_DISTANCE(a, b) ((a == b) ? 1 : a - b)
 typedef struct MAP {
   char **map_matrix;
   unsigned int n_rows;
@@ -16,7 +27,13 @@ typedef struct NODE_INFO {
 } node_info;
 
 coordinate get_edge_with_greatest_area(coordinate coord_1, coordinate coord_2,
-                                       int root_row, int root_col) {}
+                                       int root_row, int root_col) {
+  int area_1 =
+      POINT_DISTANCE(root_row, coord_1.y) * POINT_DISTANCE(root_col, coord_1.x);
+  int area_2 =
+      POINT_DISTANCE(root_row, coord_2.y) * POINT_DISTANCE(root_col, coord_2.x);
+  return (area_1 > area_2) ? coord_1 : coord_2;
+}
 
 node_info filter_edges(node_info bottom_search_edges,
                        node_info right_search_edges, int root_row,
