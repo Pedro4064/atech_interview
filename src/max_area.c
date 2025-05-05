@@ -1,5 +1,6 @@
 #include "max_area.h"
 
+#define MAX(a, b) ((a > b) ? a : b)
 typedef struct MAP {
   char **map_matrix;
   unsigned int n_rows;
@@ -13,6 +14,46 @@ typedef struct NODE_INFO {
   coordinate bottom_edge;
   coordinate right_edge;
 } node_info;
+
+coordinate get_edge_with_greatest_area(coordinate coord_1, coordinate coord_2,
+                                       int root_row, int root_col) {}
+
+node_info filter_edges(node_info bottom_search_edges,
+                       node_info right_search_edges, int root_row,
+                       int root_col) {
+  node_info resulting_edges;
+
+  int max_y_allowed =
+      MAX(bottom_search_edges.bottom_edge.y, bottom_search_edges.right_edge.y);
+  int max_x_allowed =
+      MAX(right_search_edges.bottom_edge.x, right_search_edges.right_edge.x);
+
+  // To determine which of the edges resulted from the right search to use, we
+  // first need to disconsider any that have a y coord greater than the allowed
+  // by the search results from the bottom nodes
+  if (right_search_edges.bottom_edge.y > max_y_allowed)
+    resulting_edges.right_edge = right_search_edges.right_edge;
+  else if (right_search_edges.right_edge.y > max_y_allowed)
+    resulting_edges.right_edge = right_search_edges.bottom_edge;
+  else
+    resulting_edges.right_edge = get_edge_with_greatest_area(
+        right_search_edges.bottom_edge, right_search_edges.right_edge, root_row,
+        root_col);
+
+  // To determine which of the edges resulted from the bottom search to use, we
+  // first need to disconsider any that have a x coord greater than the allowed
+  // by the search results from the right nodes
+  if (bottom_search_edges.right_edge.x > max_x_allowed)
+    resulting_edges.bottom_edge = bottom_search_edges.bottom_edge;
+  else if (bottom_search_edges.bottom_edge.x > max_x_allowed)
+    resulting_edges.bottom_edge = bottom_search_edges.right_edge;
+  else
+    resulting_edges.bottom_edge = get_edge_with_greatest_area(
+        bottom_search_edges.bottom_edge, bottom_search_edges.right_edge,
+        root_row, root_col);
+
+  return resulting_edges;
+}
 
 node_info search_furthest_nodes(map *search_map, int root_row, int root_col) {
   node_info bottom_search;
@@ -41,6 +82,8 @@ node_info search_furthest_nodes(map *search_map, int root_row, int root_col) {
   } else {
     right_search = search_furthest_nodes(search_map, root_row, root_col + 1);
   }
+
+  return filter_edges(bottom_search, right_search, root_row, root_col);
 }
 
 int calculate_max_area(char **input_matrix, unsigned int M, unsigned int N) {
