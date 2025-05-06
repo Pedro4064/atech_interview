@@ -2,7 +2,7 @@
 
 This repository contains the solution to the problem proposed for the Jr Position at Atech. 
 
-Furthermore, a detailed explanation of the solution can be found in this repo's wiki.
+Furthermore, a detailed explanation of the solution can be found in this repo's [wiki](https://github.com/Pedro4064/atech_interview/wiki).
 
 ## Problem Overview 
 
@@ -41,4 +41,4 @@ All teste cases are located inside the [tests directory.](./tests/test_max_area.
 
 ## Solution Explanation
 
-As previously state, a detailed solution for the problem can be found on this repo's wiki.
+As previously state, a detailed solution for the problem can be found on this [repo's wiki](https://github.com/Pedro4064/atech_interview/wiki).
